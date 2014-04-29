@@ -1,0 +1,8 @@
+[run]
+source = 
+    http_signature
+
+[report]
+omit =
+    */tests/*
+    */_version*
