@@ -9,6 +9,8 @@ from Crypto.Hash import SHA256, SHA, SHA512, HMAC
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
 
+from six import b
+
 from .utils import sig, is_rsa, CaseInsensitiveDict
 
 ALGORITHMS = frozenset(['rsa-sha1', 'rsa-sha256', 'rsa-sha512', 'hmac-sha1', 'hmac-sha256', 'hmac-sha512'])
@@ -80,6 +82,10 @@ class Signer(object):
             self._agent_key = None
     
     def sign(self, sign_string):
+        """
+        :param sign_string: an encoded string
+        :raises TypeError: if sign_string is not well encoded
+        """
         data = None
         if self._agent_key:
             data = self.sign_agent(sign_string)
@@ -170,7 +176,7 @@ class HeaderSigner(object):
 
                 signable_list.append('%s: %s' % (h.lower(), headers[h]))
         signable = '\n'.join(signable_list)
-        signature = self.signer.sign(signable)
+        signature = self.signer.sign(b(signable))
         headers['Authorization'] = self.signature_template % signature
 
     def sign(self, h, method=None, path=None, http_version='1.1'):
