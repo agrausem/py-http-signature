@@ -1,5 +1,5 @@
 from requests.auth import AuthBase
-from urlparse import urlparse
+from six.moves.urllib_parse import urlparse
 
 from .sign import HeaderSigner
 
